@@ -1,0 +1,165 @@
+.weather-block {
+  min-height: 260px;
+  padding: 20px 0 60px;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: $color-white;
+
+  @include onTablet {
+    padding: 30px;
+  }
+
+  @include onDesktop {  
+    border-radius: 24px;
+  }
+
+  &__header {
+    display: flex;
+    padding: 0 20px;
+    flex-wrap: wrap-reverse;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+
+    @include onTablet {
+      padding: 0;
+    }
+  } 
+
+  &__buttons {
+    display: flex;
+    min-height: 45px;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    @include onTablet {
+      gap: 30px;
+      width: auto;
+    }
+
+    @include onDesktop {
+      gap: 40px;
+    }
+  }
+
+  &__city {
+    flex: 1 1 auto;
+  }
+
+  &__content {
+    margin-top: 20px;
+
+    @include onTablet {
+      margin-top: 30px;
+    }
+
+    &__preloader {
+      left: 30px;
+      top: 10px;
+      max-width: 50px;
+    }
+  }
+}
+
+.weather-info {
+  display: flex;
+  min-height: 425px;
+  flex-direction: column;
+  gap: 30px;
+  padding: 20px 0 0;
+
+  background-color: $color-back-blue;
+
+  @include onTablet {
+    padding: 30px;
+    border-radius: 20px;
+  }
+
+  @include onDesktop {
+    min-height: 340px;
+    flex-direction: row;
+    gap: 20px;
+  }
+}
+
+.switcher-container {
+  flex-grow: 1;
+}
+
+.mode-switcher {
+  display: inline-block;
+  position: relative;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 30px;
+
+  &__input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  &__slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $color-medium-grey;
+    border-radius: 30px;
+    transition: 0.4s;
+
+    &::before {
+      position: absolute;
+      content: attr(data-content);
+      height: 24px;
+      width: 26px;
+      left: 3px;
+      bottom: 3px;
+
+      text-align: center;
+      background-color: $color-white;
+      border-radius: 26px;
+
+      font-size: 14px;
+      line-height: 25px;
+      transition: 0.3s;
+    }
+  }
+
+  &__input:checked + &__slider {
+    background-color: $color-font-active;
+  }
+
+  &__input:checked + &__slider:before {
+    transform: translateX(16px);
+  }
+}
+
+.remove-block-button {
+  height: 34px;
+  width: 34px;
+  flex: 0 0 auto;
+
+  padding: 4px 0 0;
+
+  border-radius: 50%;
+  border: none;
+  background-color: $color-white-transparent;
+
+  transition: all 0.2s;
+  cursor: pointer;
+
+  &::before {
+    content: url('../assets/img/icons/icon-cross.svg');
+  }
+
+  &:hover {
+    background-color: $color-white-button-hover;
+  }
+}
