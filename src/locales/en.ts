@@ -30,7 +30,7 @@ export default {
     nov: 'nov',
     dec: 'dec',
   },
-  chartHeader: 'Temperature forecast',
+  chartHeader: 'Temperature forecast (local time)',
   blockRemoveModalMsg: 'Remove it?',
   favoritesExceedModalMsg: 'To add a new city to favorites first remove another city (maximum 5 favorites)',
   favoritesEmptyHeader: 'Favorites list is empty!',

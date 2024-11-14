@@ -31,6 +31,10 @@ export const useWeatherAppStore = defineStore('weather-app', () => {
     blockToCloseId.value = null
   }
 
+  function clearWeatherBlocks() {
+    weatherBlocks.value = []
+  }
+
   return {
     weatherBlocks,
     isMaxFavoritesDialogShown,
@@ -40,5 +44,6 @@ export const useWeatherAppStore = defineStore('weather-app', () => {
     setIsRemoveWeatherBlockDialogShown,
     setBlockToCloseId,
     closeWeatherBlock,
+    clearWeatherBlocks,
   }
 })

@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import SearchPanel from './SearchPanel.vue'
-import '../styles/weather-block.scss'
-import { apiGetWeatherForecast, apiGetWeatherForToday } from '@/api/api'
-import { openweatherConfig } from '@/enums/ApiEnum'
-import { useNotify } from '@/composables/useNotify'
 import { useI18n } from 'vue-i18n'
+import { apiGetWeatherForecast, apiGetWeatherForToday } from '@/api/api'
 import type { CityAutocompleteModel, CurrentWeatherDataModel, ForecastWeatherDataModel } from '@/api/models'
-import { monthNames, weatherCodeBackgrounds, weatherCodeIcons } from '@/enums/HelpersEnum'
-import LoadingSpinner from './LoadingSpinner.vue'
 import type { DayChartDataModel, PreparedForecastDataModel, PreparedTodaysDataModel } from './models'
+import { openweatherConfig } from '@/enums/ApiEnum'
+import LoadingSpinner from './LoadingSpinner.vue'
+import SearchPanel from './SearchPanel.vue'
 import WeatherCard from './WeatherCard.vue'
 import WeatherChart from './WeatherChart.vue'
 import { useWeatherAppStore } from '@/stores/weather-app'
+import { useNotify } from '@/composables/useNotify'
+import { useHelpers } from '@/composables/useHelpers'
+import { useFavorites } from '@/composables/useFavorites'
+import '../styles/weather-block.scss'
+import { maxFavoritesLength, pointsOnDayChart } from '@/enums/HelpersEnum'
 
 const { blockId } = defineProps<{
   blockId: string
@@ -21,6 +23,17 @@ const { blockId } = defineProps<{
 const { t } = useI18n()
 const { notifyError } = useNotify()
 const weatherAppStore = useWeatherAppStore()
+const {
+  getTimeLabel,
+  prepareTodaysWeatherData,
+  prepareForecastWeatherData,
+} = useHelpers()
+const {
+  favoritesLength,
+  addToFavorites,
+  removeFromFavorites,
+  checkIfInFavorites,
+} = useFavorites()
 
 const isLoading = ref<boolean>(false)
 const isFiveDaysChart = ref<boolean>(false)
@@ -29,129 +42,51 @@ const forecastWeatherData = ref<ForecastWeatherDataModel | null>(null)
 const cityName = ref<string | null>(null)
 const cityCoordinates = ref<[string, string] | null>(null)
 
-const todaysWeather = computed(() => {
-  if (!currentWeatherData.value) {
-    return null
-  }
-
-  const {
-    dt,
-    main: { temp },
-    weather: {
-      0: { icon },
-    },
-  } = currentWeatherData.value
-
-  const date = new Date(dt * 1000).getDate()
-  const temperature = Math.round(temp)
-  const iconSrc = weatherCodeIcons[icon]
-  const backgroundSrc = weatherCodeBackgrounds[icon]
-
-  return { date, temperature, iconSrc, backgroundSrc } as PreparedTodaysDataModel
-})
-
-const fourDaysForecastWeather = computed(() => {
-  if (!forecastWeatherData.value?.list.length) {
-    return null
-  }
-
-  const localTimezone = forecastWeatherData.value.city.timezone
-  const todaysDate = new Date(forecastWeatherData.value.list[0].dt + localTimezone).getUTCDate()
-
-  let id = 0
-  let nightTemps = [] as number[]
-  let dayTemps = [] as number[]
-  let cloudsIds = [] as number[]
-
-  const getAverageFromArray = (values: number[]) => {
-    return Math.round(values.reduce((acc, value) => acc + value) / values.length)
-  }
-
-  // forecast list contains data for every 3 hours, we need to calculate average data for next 4 days
-  return forecastWeatherData.value.list.reduce((acc, dayData) => {
-    const localTimestamp = dayData.dt + localTimezone
-    const dateObj = new Date(localTimestamp * 1000)
-    const date = dateObj.getUTCDate()
-    const month = dateObj.getUTCMonth()
-    const hours = dateObj.getUTCHours()
-    const temperature = dayData.main.temp
-    const clouds = dayData.clouds.all
-
-    // we do not need forecast for today and further date if we already have 4 days in accumulator
-    if (date === todaysDate || acc.length >= 4) {
-      return acc
-    }
-
-    // split for night and day temperatures
-    if (hours < 9) {
-      nightTemps.push(temperature)
-    } else {
-      dayTemps.push(temperature)
-    }
-
-    cloudsIds.push(clouds)
-
-    if (dayTemps.length >= 5) {
-      acc.push({
-        id,
-        date: date,
-        month: monthNames[month],
-        nightTemp: getAverageFromArray(nightTemps),
-        dayTemp: getAverageFromArray(dayTemps),
-        clouds: getAverageFromArray(cloudsIds),
-      })
-
-      nightTemps = []
-      dayTemps = []
-      cloudsIds = []
-      id++
-    }
-
-    return acc
-  }, [] as PreparedForecastDataModel[])
-})
-
+// data for the city card
 const cardData = computed(() => {
-  if (!todaysWeather.value || !fourDaysForecastWeather.value) {
+  if (!currentWeatherData.value || !forecastWeatherData.value?.list.length) {
     return null
   }
 
-  return [todaysWeather.value, fourDaysForecastWeather.value] as [PreparedTodaysDataModel, PreparedForecastDataModel[]]
+  const todaysWeather = prepareTodaysWeatherData(currentWeatherData.value)
+  const forecastWeather = prepareForecastWeatherData(forecastWeatherData.value)
+
+  return [todaysWeather, forecastWeather] as [PreparedTodaysDataModel, PreparedForecastDataModel[]]
 })
 
+// data for weather chart
 const chartData = computed(() => {
   if (!forecastWeatherData.value?.list.length) {
     return null
   }
 
-  if (isFiveDaysChart.value && fourDaysForecastWeather.value) {
-    return fourDaysForecastWeather.value
+  // chart is built on cardData forecastWeather in 5 days mode
+  if (isFiveDaysChart.value && cardData.value?.[1]) {
+    return cardData.value[1]
   }
 
+  // gather data for 1 day chart
   const timezoneOffset = forecastWeatherData.value.city.timezone
-
-  const getTime = (timestamp: number) => {
-    const localTimestamp = timestamp + timezoneOffset
-    let hours = String(new Date(localTimestamp * 1000).getUTCHours())
-
-    if (hours.length === 1) {
-      hours = '0' + hours
-    }
-
-    return `${hours}:00`
-  }
 
   return forecastWeatherData.value.list.map((forecastEntry) => {
     const {
       dt,
       main: { temp },
     } = forecastEntry
-    const time = getTime(dt).slice(0, 5)
+    const time = getTimeLabel(dt, timezoneOffset)
 
     return { time, temperature: Math.round(temp) }
-  }) as DayChartDataModel[]
+  }).slice(0, pointsOnDayChart) as DayChartDataModel[]
 })
 
+const isInFavorites = computed(() => {
+  if (!cityName.value)
+    return false
+
+  return checkIfInFavorites(cityName.value)
+})
+
+// load city weather data
 async function handleCitySelected(data: CityAutocompleteModel) {
   try {
     isLoading.value = true
@@ -183,6 +118,29 @@ function handleCloseWeatherBlock() {
   weatherAppStore.setBlockToCloseId(blockId)
   weatherAppStore.setIsRemoveWeatherBlockDialogShown(true)
 }
+
+function handleFavoriteToggle() {
+  if (!cityName.value || !cityCoordinates.value) {
+    return
+  }
+  // if city is already in favorites, remove it
+  if (isInFavorites.value) {
+    removeFromFavorites(cityName.value)
+    return
+  }
+  // if favorites are full, show dialog with warning
+  if (favoritesLength.value >= maxFavoritesLength) {
+    weatherAppStore.setIsMaxFavoritesDialogShown(true)
+    return
+  }
+
+  const newCity = {
+    name: cityName.value,
+    coordinates: cityCoordinates.value,
+  }
+
+  addToFavorites(newCity)
+}
 </script>
 
 <template>
@@ -195,12 +153,13 @@ function handleCloseWeatherBlock() {
       </div>
 
       <div class="weather-block__buttons">
-        <!-- <FavoritesButton
-          v-if="cardData"
-          :selectedCity="selectedCity"
-          :coordinates="coordinates"
-          @extraFavoriteAdded="handleExtraFavorite"
-        /> -->
+        <button
+          class="favorites-button"
+          @click="handleFavoriteToggle"
+        >
+          <img v-if="isInFavorites" src="../assets/img/icons/icon-star-full.svg" class="favorites-icon" />
+          <img v-else src="../assets/img/icons/icon-star-empty.svg" class="favorites-icon" />
+        </button>
 
         <div class="switcher-container">
           <label class="mode-switcher">
@@ -217,6 +176,7 @@ function handleCloseWeatherBlock() {
         </div>
 
         <button
+          v-if="weatherAppStore.weatherBlocks.length > 1"
           class="remove-block-button"
           @click="handleCloseWeatherBlock"
         />

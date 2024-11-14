@@ -3,6 +3,7 @@ import Chart, { type ChartTypeRegistry } from 'chart.js/auto'
 import type { DayChartDataModel, PreparedForecastDataModel } from './models'
 import { onMounted, ref, computed, watch, shallowRef } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useHelpers } from '@/composables/useHelpers'
 
 const { chartData, isFiveDaysChart } = defineProps<{
   chartData: (DayChartDataModel | PreparedForecastDataModel)[]
@@ -10,26 +11,10 @@ const { chartData, isFiveDaysChart } = defineProps<{
 }>()
 
 const { t } = useI18n()
+const { prepareChartData } = useHelpers()
 
 const weatherChart = ref<HTMLCanvasElement | null>(null)
 const chart = shallowRef<Chart<keyof ChartTypeRegistry, number[] | undefined, string> | null>(null)
-
-function prepareChartData(chartData: (DayChartDataModel | PreparedForecastDataModel)[], isFiveDaysChart: boolean) {
-  if (isFiveDaysChart) {
-    const daysChartData = chartData as PreparedForecastDataModel[]
-    const xAxisLabels = daysChartData.map(entry => `${entry.date} ${t(`months.${entry.month}`)}`)
-    const graphDayTemp = daysChartData.map(entry => entry.dayTemp)
-    const graphNightTemp = daysChartData.map(entry => entry.nightTemp)
-
-    return { xAxisLabels, graphDayTemp, graphNightTemp }
-  }
-
-  const dayChartData = chartData as DayChartDataModel[]
-  const xAxisLabels = dayChartData.map(entry => entry.time)
-  const graphTemperature = dayChartData.map(entry => entry.temperature)
-
-  return { xAxisLabels, graphTemperature }
-};
 
 const chartConfig = computed(() => {
   const {

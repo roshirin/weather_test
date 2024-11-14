@@ -1,14 +1,18 @@
 <script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue'
 import MaxFavoritesDialog from '@/components/MaxFavoritesDialog.vue'
 import RemoveWeatherBlockDialog from '@/components/RemoveWeatherBlockDialog.vue'
 import WeatherBlock from '@/components/WeatherBlock.vue'
 import { useWeatherAppStore } from '@/stores/weather-app'
-import { onMounted } from 'vue'
 
 const weatherAppStore = useWeatherAppStore()
 
 onMounted(() => {
   weatherAppStore.addWeatherBlock()
+})
+
+onUnmounted(() => {
+  weatherAppStore.clearWeatherBlocks()
 })
 </script>
 

@@ -75,3 +75,6 @@ export const weatherCodeBackgrounds: Record<WeatherCodeEnum, string> = {
   [WeatherCodeEnum.FOG_DAY]: 'scattered-clouds.jpg',
   [WeatherCodeEnum.FOG_NIGHT]: 'scattered-clouds.jpg',
 }
+
+export const maxFavoritesLength = 5
+export const pointsOnDayChart = 8

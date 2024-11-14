@@ -29,7 +29,7 @@ export default {
     nov: 'лис',
     dec: 'гру',
   },
-  chartHeader: 'Прогноз температури',
+  chartHeader: 'Прогноз температури (місцевий час)',
   blockRemoveModalMsg: 'Прибрати його?',
   favoritesExceedModalMsg: 'Щоб додати ще одне місто, спершу видаліть інше (не більше 5 улюблених міст).',
   favoritesEmptyHeader: 'Жодного улюбленого міста!',

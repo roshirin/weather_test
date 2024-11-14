@@ -18,3 +18,8 @@ export interface DayChartDataModel {
   time: string
   temperature: number
 }
+
+export interface FavoriteCityModel {
+  name: string
+  coordinates: [string, string]
+}
