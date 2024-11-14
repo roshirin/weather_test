@@ -23,7 +23,7 @@ const { t } = useI18n()
           {{ cardData[0].temperature }}°C
         </div>
 
-        <img :src="`/img/icons/${cardData[0].iconSrc}`" class="current-info__icon" />
+        <img :src="`img/icons/${cardData[0].iconSrc}`" class="current-info__icon" />
       </div>
     </div>
 

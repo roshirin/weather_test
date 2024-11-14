@@ -193,7 +193,7 @@ onMounted(() => {
 <template>
   <div
     class="weather-block"
-    :style="{ backgroundImage: `url(/img/backgrounds/${backgroundImageSrc})` }"
+    :style="{ backgroundImage: `url(img/backgrounds/${backgroundImageSrc})` }"
   >
     <div class="weather-block__header">
       <div v-if="!favoriteCityData" class="search-block weather-block__city">
