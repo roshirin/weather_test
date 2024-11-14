@@ -109,4 +109,14 @@ const { t } = useI18n()
       color: $color-font-dark;
     }
   }
+
+  .weather-blocks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    @include onTablet {
+      gap: 30px;
+    }
+  }
 </style>

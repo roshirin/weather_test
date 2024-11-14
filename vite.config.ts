@@ -16,7 +16,7 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],
-  base: '/weather-test/',
+  base: '/weather_test/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

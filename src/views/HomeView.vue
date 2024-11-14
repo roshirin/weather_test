@@ -89,16 +89,6 @@ onUnmounted(() => {
     background-color: $color-white;
   }
 
-  .weather-blocks-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-
-    @include onTablet {
-      gap: 30px;
-    }
-  }
-
   .add-block-button {
     width: 100%;
     height: 60px;
