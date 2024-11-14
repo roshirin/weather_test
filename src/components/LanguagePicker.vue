@@ -23,5 +23,6 @@ const { locale } = useI18n()
     background-color: transparent;
     font-size: 18px;
     color: $color-font-dark;
+    cursor: pointer;
   }
 </style>

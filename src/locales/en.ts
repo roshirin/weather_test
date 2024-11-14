@@ -5,7 +5,7 @@ export default {
   },
   message: {
     searchInputPlaceholder: 'Choose a city',
-    searchButton: 'Search',
+    initialLoadingPermission: 'If you want to get your local weather, give permission to get your coordinates please.',
   },
   button: {
     confirm: 'Confirm',

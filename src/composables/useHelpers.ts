@@ -108,10 +108,30 @@ export function useHelpers() {
     return { xAxisLabels, graphTemperature }
   };
 
+  async function getCoordinatesByIp(): Promise<[number, number] | null> {
+    try {
+      const position: GeolocationPosition = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+      })
+
+      const latitude = position.coords.latitude
+      const longitude = position.coords.longitude
+
+      return [latitude, longitude]
+    } catch (error) {
+      if (error instanceof GeolocationPositionError) {
+        console.error("Geolocation error:", error.message)
+      }
+
+      return null
+    }
+  };
+
   return {
     getTimeLabel,
     prepareTodaysWeatherData,
     prepareForecastWeatherData,
     prepareChartData,
+    getCoordinatesByIp,
   }
 }

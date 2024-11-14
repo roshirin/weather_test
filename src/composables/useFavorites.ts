@@ -5,7 +5,7 @@ import { computed } from "vue"
 export function useFavorites() {
   const favoriteCities = useStorage('favorites', [] as FavoriteCityModel[])
 
-  const favoritesLength = computed(() => favoriteCities.value.length)
+  const getFavoriteCities = computed(() => favoriteCities.value)
 
   function addToFavorites(newCity: FavoriteCityModel) {
     favoriteCities.value.push(newCity)
@@ -20,7 +20,7 @@ export function useFavorites() {
   }
 
   return {
-    favoritesLength,
+    getFavoriteCities,
     addToFavorites,
     removeFromFavorites,
     checkIfInFavorites,

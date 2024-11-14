@@ -1,12 +1,18 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
+import WeatherBlock from '@/components/WeatherBlock.vue'
+import { useFavorites } from '@/composables/useFavorites'
 
-const { t } = useI18n()
+const { getFavoriteCities } = useFavorites()
 </script>
 
 <template>
-  <div>
-    {{ t('message.goodbye') }}
+  <div class="weather-blocks-container">
+    <template
+      v-for="city in getFavoriteCities"
+      :key="city.name"
+    >
+      <weather-block :block-id="city.name" :favorite-city-data="city"/>
+    </template>
   </div>
 </template>
 

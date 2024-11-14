@@ -56,12 +56,6 @@
     @include onTablet {
       margin-top: 30px;
     }
-
-    &__preloader {
-      left: 30px;
-      top: 10px;
-      max-width: 50px;
-    }
   }
 }
 
@@ -83,6 +77,11 @@
     min-height: 340px;
     flex-direction: row;
     gap: 20px;
+  }
+
+  &__spinner {
+    margin: 0 auto;
+    align-self: center;
   }
 }
 
@@ -160,7 +159,7 @@
   }
 
   &:hover {
-    background-color: $color-white-button-hover;
+    background-color: $color-white;
   }
 }
 

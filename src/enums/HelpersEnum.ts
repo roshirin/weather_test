@@ -61,20 +61,21 @@ export const weatherCodeBackgrounds: Record<WeatherCodeEnum, string> = {
   [WeatherCodeEnum.FEW_CLOUDS_DAY]: 'few-clouds.jpg',
   [WeatherCodeEnum.FEW_CLOUDS_NIGHT]: 'few-clouds-night.jpg',
   [WeatherCodeEnum.SCATTERED_CLOUDS_DAY]: 'scattered-clouds.jpg',
-  [WeatherCodeEnum.SCATTERED_CLOUDS_NIGHT]: 'scattered-clouds.jpg',
+  [WeatherCodeEnum.SCATTERED_CLOUDS_NIGHT]: 'scattered-clouds-night.jpg',
   [WeatherCodeEnum.OVERCAST_CLOUDS_DAY]: 'overcast-clouds.jpg',
-  [WeatherCodeEnum.OVERCAST_CLOUDS_NIGHT]: 'overcast-clouds.jpg',
+  [WeatherCodeEnum.OVERCAST_CLOUDS_NIGHT]: 'overcast-clouds-night.jpg',
   [WeatherCodeEnum.HEAVY_RAIN_DAY]: 'heavy-rain.jpg',
-  [WeatherCodeEnum.HEAVY_RAIN_NIGHT]: 'heavy-rain.jpg',
+  [WeatherCodeEnum.HEAVY_RAIN_NIGHT]: 'heavy-rain-night.jpg',
   [WeatherCodeEnum.LIGHT_RAIN_DAY]: 'light-rain.jpg',
   [WeatherCodeEnum.LIGHT_RAIN_NIGHT]: 'light-rain-night.jpg',
   [WeatherCodeEnum.THUNDERSTORM_DAY]: 'thunderstorm-with-rain.jpg',
-  [WeatherCodeEnum.THUNDERSTORM_NIGHT]: 'thunderstorm-with-rain.jpg',
+  [WeatherCodeEnum.THUNDERSTORM_NIGHT]: 'thunderstorm-with-rain-night.jpg',
   [WeatherCodeEnum.SNOW_DAY]: 'snow.jpg',
-  [WeatherCodeEnum.SNOW_NIGHT]: 'snow.jpg',
-  [WeatherCodeEnum.FOG_DAY]: 'scattered-clouds.jpg',
-  [WeatherCodeEnum.FOG_NIGHT]: 'scattered-clouds.jpg',
+  [WeatherCodeEnum.SNOW_NIGHT]: 'snow-night.jpg',
+  [WeatherCodeEnum.FOG_DAY]: 'fog.jpg',
+  [WeatherCodeEnum.FOG_NIGHT]: 'fog-night.jpg',
 }
 
 export const maxFavoritesLength = 5
 export const pointsOnDayChart = 8
+export const initialBlockId = 'initial-block'

@@ -5,6 +5,7 @@ export interface OpenweatherParamsModel {
   lon: string
   appid: string
   units: string
+  lang: string
 }
 
 export interface LocationiqParamsModel {

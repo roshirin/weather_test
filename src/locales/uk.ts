@@ -5,6 +5,7 @@ export default {
   },
   message: {
     searchInputPlaceholder: 'Оберіть місто',
+    initialLoadingPermission: 'Якщо ви бажаєте отримати місцевий прогноз погоди, дозвольте використати ваші координати, будь ласка.',
   },
   button: {
     confirm: 'Згода',

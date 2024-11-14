@@ -1,39 +1,38 @@
-# weather-test
+# weather_test
 
-This template should help get you started developing with Vue 3 in Vite.
+[Live Demo](https://roshirin.github.io/weather_test/)
 
-## Recommended IDE Setup
+## Description
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+The Weather App is a Vue.js application that allows users to get current weather information and a temperature forecast for various cities.
 
-## Type Support for `.vue` Imports in TS
+### Core technologies used
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- Vue 3 Composition API
+- Pinia
+- I18n
+- SCSS
+- Chart.js
+- LocationIQ API
+- OpenWeather API
 
-## Customize configuration
+### Features
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+- Current weather information display
+- Option to load weather by users locale
+- Today's or five-days forecast for selected cities
+- Add and remove weather blocks
+- Add blocks to Favorites list
+- Language en/uk localization
+- Change in appearance depending on weather conditions
+- Responsive design
 
-## Project Setup
+## Installation
 
-```sh
-npm install
-```
+1. Clone the repository.
+2. Install dependencies: `npm install`
 
-### Compile and Hot-Reload for Development
+## Usage
 
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+1. Run the development server: `npm run serve`
+2. Open the app in your web browser

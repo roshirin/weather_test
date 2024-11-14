@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { apiGetWeatherForecast, apiGetWeatherForToday } from '@/api/api'
 import type { CityAutocompleteModel, CurrentWeatherDataModel, ForecastWeatherDataModel } from '@/api/models'
-import type { DayChartDataModel, PreparedForecastDataModel, PreparedTodaysDataModel } from './models'
+import type { DayChartDataModel, FavoriteCityModel, PreparedForecastDataModel, PreparedTodaysDataModel } from './models'
 import { openweatherConfig } from '@/enums/ApiEnum'
 import LoadingSpinner from './LoadingSpinner.vue'
 import SearchPanel from './SearchPanel.vue'
@@ -13,14 +13,15 @@ import { useWeatherAppStore } from '@/stores/weather-app'
 import { useNotify } from '@/composables/useNotify'
 import { useHelpers } from '@/composables/useHelpers'
 import { useFavorites } from '@/composables/useFavorites'
+import { initialBlockId, maxFavoritesLength, pointsOnDayChart } from '@/enums/HelpersEnum'
 import '../styles/weather-block.scss'
-import { maxFavoritesLength, pointsOnDayChart } from '@/enums/HelpersEnum'
 
-const { blockId } = defineProps<{
+const { blockId, favoriteCityData } = defineProps<{
   blockId: string
+  favoriteCityData?: FavoriteCityModel
 }>()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { notifyError } = useNotify()
 const weatherAppStore = useWeatherAppStore()
 const {
@@ -29,7 +30,7 @@ const {
   prepareForecastWeatherData,
 } = useHelpers()
 const {
-  favoritesLength,
+  getFavoriteCities,
   addToFavorites,
   removeFromFavorites,
   checkIfInFavorites,
@@ -86,15 +87,44 @@ const isInFavorites = computed(() => {
   return checkIfInFavorites(cityName.value)
 })
 
+const backgroundImageSrc = computed(() => {
+  return cardData.value?.[0].backgroundSrc || 'few-clouds.jpg'
+})
+
+function loadFavoriteCityData() {
+  if (!favoriteCityData) {
+    return
+  }
+
+  const {
+    name,
+    coordinates,
+  } = favoriteCityData
+
+  const data = {
+    display_place: name,
+    lat: coordinates[0],
+    lon: coordinates[1],
+  }
+
+  handleCitySelected(data)
+}
+
 // load city weather data
-async function handleCitySelected(data: CityAutocompleteModel) {
+async function handleCitySelected(data: Partial<CityAutocompleteModel>) {
   try {
     isLoading.value = true
     const { lat, lon } = data
+
+    if (!lat || !lon) {
+      return
+    }
+
     const params = {
       ...openweatherConfig,
       lat,
       lon,
+      lang: locale.value,
     }
     const [currentData, forecastData] = await Promise.all([
       apiGetWeatherForToday(params),
@@ -129,7 +159,7 @@ function handleFavoriteToggle() {
     return
   }
   // if favorites are full, show dialog with warning
-  if (favoritesLength.value >= maxFavoritesLength) {
+  if (getFavoriteCities.value.length >= maxFavoritesLength) {
     weatherAppStore.setIsMaxFavoritesDialogShown(true)
     return
   }
@@ -141,14 +171,32 @@ function handleFavoriteToggle() {
 
   addToFavorites(newCity)
 }
+
+onMounted(() => {
+  if (blockId === initialBlockId && weatherAppStore.userCoordinates) {
+    const data = {
+      lat: String(weatherAppStore.userCoordinates[0]),
+      lon: String(weatherAppStore.userCoordinates[1]),
+    }
+
+    handleCitySelected(data)
+
+    return
+  }
+
+  if (favoriteCityData) {
+    loadFavoriteCityData()
+  }
+})
 </script>
 
 <template>
   <div
     class="weather-block"
+    :style="{ backgroundImage: `url(img/backgrounds/${backgroundImageSrc})` }"
   >
     <div class="weather-block__header">
-      <div class="search-block weather-block__city">
+      <div v-if="!favoriteCityData" class="search-block weather-block__city">
         <search-panel @city-selected="handleCitySelected"/>
       </div>
 
@@ -176,7 +224,7 @@ function handleFavoriteToggle() {
         </div>
 
         <button
-          v-if="weatherAppStore.weatherBlocks.length > 1"
+          v-if="weatherAppStore.weatherBlocks.length > 1 && !favoriteCityData"
           class="remove-block-button"
           @click="handleCloseWeatherBlock"
         />
@@ -189,7 +237,7 @@ function handleFavoriteToggle() {
     >
       <loading-spinner
         v-if="isLoading"
-        class="weather-block__preloader"
+        class="weather-info__spinner"
       />
 
       <template v-else>
