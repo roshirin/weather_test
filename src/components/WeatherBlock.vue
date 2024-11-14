@@ -193,7 +193,7 @@ onMounted(() => {
 <template>
   <div
     class="weather-block"
-    :style="{ backgroundImage: `url(/weather_test/img/backgrounds/${backgroundImageSrc})` }"
+    :style="{ backgroundImage: `url(/img/backgrounds/${backgroundImageSrc})` }"
   >
     <div class="weather-block__header">
       <div v-if="!favoriteCityData" class="search-block weather-block__city">
@@ -205,8 +205,8 @@ onMounted(() => {
           class="favorites-button"
           @click="handleFavoriteToggle"
         >
-          <img v-if="isInFavorites" src="/weather_test/img/icons/icon-star-full.svg" class="favorites-icon" />
-          <img v-else src="/weather_test/img/icons/icon-star-empty.svg" class="favorites-icon" />
+          <img v-if="isInFavorites" src="/img/icons/icon-star-full.svg" class="favorites-icon" />
+          <img v-else src="/img/icons/icon-star-empty.svg" class="favorites-icon" />
         </button>
 
         <div class="switcher-container">

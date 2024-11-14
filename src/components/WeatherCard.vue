@@ -23,7 +23,7 @@ const { t } = useI18n()
           {{ cardData[0].temperature }}°C
         </div>
 
-        <img :src="`/weather_test/img/icons/${cardData[0].iconSrc}`" class="current-info__icon" />
+        <img :src="`/img/icons/${cardData[0].iconSrc}`" class="current-info__icon" />
       </div>
     </div>
 
@@ -42,7 +42,7 @@ const { t } = useI18n()
           </div>
 
           <div class="days-item__day-temp temp-container">
-            <img src="/weather_test/img/icons/icon-day.svg" class="temp-container__icon" />
+            <img src="/img/icons/icon-day.svg" class="temp-container__icon" />
 
             <div class="temp-container__info">
               {{ day.dayTemp }}°C
@@ -50,7 +50,7 @@ const { t } = useI18n()
           </div>
 
           <div class="temp-container">
-            <img src="/weather_test/img/icons/icon-night.svg" class="temp-container__icon" />
+            <img src="/img/icons/icon-night.svg" class="temp-container__icon" />
 
             <div class="temp-container__info">
               {{ day.nightTemp }}°C
